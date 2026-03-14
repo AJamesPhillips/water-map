@@ -1,0 +1,65 @@
+
+#drought_score
+{
+    position: absolute;
+    left: 200px;
+    top: 30%;
+    bottom: 0;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+}
+
+#drought_score .score_box
+{
+    padding: 20px 50px;
+    border-radius: 10px;
+    border: thin solid #555;
+    background-color: #fafafa;
+    user-select: none;
+    transition: padding 0.5s ease-out;
+}
+
+#drought_score .extra_info
+{
+    opacity: 1;
+    height: 10%;
+    display: initial;
+    transition: opacity 0.5s ease-out, height 0.5s ease-out;
+    transition: display 0.5s ease-out 0.5s; /* delay hiding the element until after the height transition */
+}
+
+#drought_score.zoomed_in
+{
+    left: 100px;
+    top: 10%;
+    transition: left 0.5s ease-out, top 0.5s ease-out;
+}
+
+#drought_score.zoomed_in .score_box
+{
+    padding: 10px 20px;
+}
+
+#drought_score.zoomed_in .extra_info
+{
+    opacity: 0;
+    height: 0%;
+    display: none;
+}
+
+
+#drought_score .region_name
+{
+    font-size: 1.5em;
+    color: #222;
+    text-shadow: 0 2px 8px #fff, 0 0 2px #0008;
+}
+#drought_score .score
+{
+    font-size: 3.5em;
+    font-weight: 700;
+    color: #222;
+    text-shadow: 0 2px 8px #fff, 0 0 2px #0008;
+}

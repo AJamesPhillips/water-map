@@ -8,10 +8,10 @@ import { DemoSim } from "./DemoSim.tsx"
 
 function App ()
 {
-    return <div>
+    return <>
         <DemoSim />
         <div id="debug_output"></div>
-    </div>
+    </>
 }
 
 render(<App />, document.getElementById("app")!)

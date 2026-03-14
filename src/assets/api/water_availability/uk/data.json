@@ -1,0 +1,69 @@
+{
+    "name": "UK",
+    "value": [
+        {
+            "units": "billion litres",
+            "value": 1234,
+            "source": "https://www.gov.uk/made-up-url/statistics/water-availability/uk"
+        },
+        {
+            "units": "percentage",
+            "value": 56.7,
+            "source": "https://www.gov.uk/made-up-url/statistics/water-availability/uk"
+        }
+    ],
+    "time_range": {
+        "start": "2025-02-01",
+        "end": "2025-02-28"
+    },
+    "subregions": [
+        {
+            "type": "river_basin",
+            "id": "anglian"
+        },
+        {
+            "type": "river_basin",
+            "id": "dee"
+        },
+        {
+            "type": "river_basin",
+            "id": "humber"
+        },
+        {
+            "type": "river_basin",
+            "id": "north_west"
+        },
+        {
+            "type": "river_basin",
+            "id": "northumbria"
+        },
+        {
+            "type": "river_basin",
+            "id": "severn"
+        },
+        {
+            "type": "river_basin",
+            "id": "solway_tweed"
+        },
+        {
+            "type": "river_basin",
+            "id": "south_east"
+        },
+        {
+            "type": "river_basin",
+            "id": "south_west"
+        },
+        {
+            "type": "river_basin",
+            "id": "thames"
+        },
+        {
+            "type": "water_resource_zone",
+            "id": "wessex"
+        },
+        {
+            "type": "water_resource_zone",
+            "id": "wcwr"
+        }
+    ]
+}

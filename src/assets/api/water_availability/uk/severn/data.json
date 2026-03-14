@@ -1,0 +1,65 @@
+{
+    "name": "Severn",
+    "value": [
+        {
+            "units": "billion litres",
+            "value": 780,
+            "source": "https://www.gov.uk/made-up-url/statistics/water-availability/england/severn"
+        },
+        {
+            "units": "percentage",
+            "value": 67.8,
+            "source": "https://www.gov.uk/made-up-url/statistics/water-availability/england/severn"
+        }
+    ],
+    "time_range": {
+        "start": "2025-02-01",
+        "end": "2025-02-28"
+    },
+    "subregions": [
+        {
+            "type": "managed_catchments",
+            "id": "avon_bristol_sns"
+        },
+        {
+            "type": "managed_catchments",
+            "id": "avon_warwickshire"
+        },
+        {
+            "type": "managed_catchments",
+            "id": "severn_england_awb"
+        },
+        {
+            "type": "managed_catchments",
+            "id": "severn_england_gw"
+        },
+        {
+            "type": "managed_catchments",
+            "id": "severn_england_trac"
+        },
+        {
+            "type": "managed_catchments",
+            "id": "severn_mid_shropshire"
+        },
+        {
+            "type": "managed_catchments",
+            "id": "severn_mid_worcestershire"
+        },
+        {
+            "type": "managed_catchments",
+            "id": "severn_uplands"
+        },
+        {
+            "type": "managed_catchments",
+            "id": "severn_vale"
+        },
+        {
+            "type": "managed_catchments",
+            "id": "teme"
+        },
+        {
+            "type": "managed_catchments",
+            "id": "wye_mc"
+        }
+    ]
+}

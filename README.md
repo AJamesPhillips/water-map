@@ -1,10 +1,14 @@
 
-# WikiSim template simulation - typescript, preact & three.js
+# Water Map UK
+
+A work in progress concept of a UK water availability map.
+
+Currently [hosted here](https://wikisim.org/wiki/1219)
 
 ## Getting Started
 
-    git clone git@github.com:wikisim/template-sim-typescript-preact-three.git your-new-sim-name --recursive
-    cd your-new-sim-name
+    git clone git@github.com:AJamesPhillips/water-map.git water-map-uk --recursive
+    cd water-map-uk
     pnpm install
     pnpm run dev
 
