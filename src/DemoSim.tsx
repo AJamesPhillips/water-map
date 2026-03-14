@@ -7,6 +7,7 @@ import * as THREE from "three"
 // import { get_supabase } from "core/supabase/browser"
 
 import "./DemoSim.css"
+import { Disclaimer } from "./Disclaimer"
 import { DemoGeom } from "./DrawGeom"
 import { DroughtScore } from "./DroughtScore"
 import { LatLonScale, Regions, SceneData } from "./interface"
@@ -142,6 +143,8 @@ export function DemoSim()
 
     return <>
         <div style={{position: "relative", width: "100%", height: "100%"}}>
+            <Disclaimer />
+
             <canvas ref={canvas_ref} id="scene-3d" style={{display: "block", width: "100%", height: "100%"}} />
             <DemoGeom
                 scene_data={scene_data}
