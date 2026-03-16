@@ -17,6 +17,7 @@ export function Disclaimer()
     return <div className={"disclaimer " + (disclaimer_shown ? "hidden" : "")}>
         {!disclaimer_shown && <div className="disclaimer-background" onPointerDown={on_click}/>}
 
+        <div></div>
         <div
             className="disclaimer-text"
             onPointerDown={on_click}
@@ -36,6 +37,7 @@ export function Disclaimer()
                 Got it!
             </button>
         </div>
+        <div></div>
     </div>
 }
 
