@@ -30,6 +30,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
+  "include": ["src", "vite_handle_redirected_files.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
