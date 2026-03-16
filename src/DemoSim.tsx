@@ -11,9 +11,9 @@ import { Disclaimer } from "./Disclaimer"
 import { DemoGeom } from "./DrawGeom"
 import { DroughtScore } from "./DroughtScore"
 import { LatLonScale, Regions, SceneData } from "./interface"
+import { regions, river_basins_and_catchments } from "./regions"
 import { TimeSlider } from "./TimeSlider"
 import pub_sub from "./utils/pub_sub"
-import { regions, river_basins_and_catchments } from "./utils/pub_sub/regions"
 import { mutate_region_water_availability } from "./utils/time"
 
 

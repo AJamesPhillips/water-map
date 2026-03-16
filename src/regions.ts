@@ -1,5 +1,5 @@
-import { Catchments, RegionInfo, Regions, RiverBasins } from "../../interface"
-import { asset_url } from "../asset_url"
+import { Catchments, RegionInfo, Regions, RiverBasins } from "./interface"
+import { asset_url } from "./utils/asset_url"
 
 const geojson = (name: string) => asset_url(`assets/data/${name}.geojson`)
 
