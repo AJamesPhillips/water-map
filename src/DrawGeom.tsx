@@ -71,7 +71,7 @@ export function DemoGeom(props: DemoGeomProps)
 {
     const { scene_data, region_info } = props
     if (!scene_data) return null
-    const { dpr, camera, scene, renderer, width, height, half_h } = scene_data
+    const { dpr, camera, scene, width, height, half_h } = scene_data
 
     const [geojson, set_geojson] = useState<FeatureCollection | null>(null)
     const [geojson_error, set_geojson_error] = useState<string | null>(null)
@@ -216,7 +216,6 @@ export function DemoGeom(props: DemoGeomProps)
             mesh_list.forEach(m => m.outer_line?.geometry.dispose())
             fill_mat.dispose()
             edge_mat.dispose()
-            renderer.dispose()
             unsub_hovered_region()
         }
     }, [geojson])

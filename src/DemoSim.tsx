@@ -93,7 +93,7 @@ export function DemoSim()
         animate()
 
 
-        set_scene_data({ dpr, canvas: canvas_ref.current, camera, scene, renderer, width, height, aspect, half_h })
+        set_scene_data({ dpr, canvas: canvas_ref.current, camera, scene, width, height, aspect, half_h })
 
         return () =>
         {

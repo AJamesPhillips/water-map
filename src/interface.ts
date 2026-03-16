@@ -8,7 +8,7 @@ export interface SceneData
     canvas: HTMLCanvasElement
     camera: THREE.Camera
     scene: THREE.Scene
-    renderer: THREE.WebGLRenderer
+    // renderer: THREE.WebGLRenderer
 
     width: number
     height: number
