@@ -17,5 +17,24 @@
 
 #time_slider .slider
 {
-    width: 500px;
+    max-width: 500px;
+}
+
+@media (pointer: coarse)
+{
+    input[type="range"]::-webkit-slider-thumb
+    {
+        width: 24px;
+        height: 24px;
+    }
+    input[type="range"]::-moz-range-thumb
+    {
+        width: 24px;
+        height: 24px;
+    }
+    input[type="range"]::-ms-thumb
+    {
+        width: 24px;
+        height: 24px;
+    }
 }
