@@ -5,7 +5,6 @@ import { Line2 } from "three/addons/lines/Line2.js"
 import { LineGeometry } from "three/addons/lines/LineGeometry.js"
 import { LineMaterial } from "three/addons/lines/LineMaterial.js"
 
-
 import "./DrawGeom.css"
 import { LatLonScale, RegionInfo, Regions, SceneData } from "./interface"
 import { water_to_drought_color } from "./utils/colour_scales"

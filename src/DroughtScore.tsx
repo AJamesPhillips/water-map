@@ -1,22 +1,16 @@
-import scale_A from "./assets/scale_A.png"
-import scale_B from "./assets/scale_B.png"
-import scale_C from "./assets/scale_C.png"
-import scale_D from "./assets/scale_D.png"
-import scale_E from "./assets/scale_E.png"
-import scale_F from "./assets/scale_F.png"
-import scale_G from "./assets/scale_G.png"
 import "./DroughtScore.css"
 import { RegionInfo } from "./interface"
+import { asset_url } from "./utils/asset_url"
 
 
 const scale_images = {
-    "A": scale_A,
-    "B": scale_B,
-    "C": scale_C,
-    "D": scale_D,
-    "E": scale_E,
-    "F": scale_F,
-    "G": scale_G,
+    "A": asset_url("assets/scale_A.png"),
+    "B": asset_url("assets/scale_B.png"),
+    "C": asset_url("assets/scale_C.png"),
+    "D": asset_url("assets/scale_D.png"),
+    "E": asset_url("assets/scale_E.png"),
+    "F": asset_url("assets/scale_F.png"),
+    "G": asset_url("assets/scale_G.png"),
 }
 
 
