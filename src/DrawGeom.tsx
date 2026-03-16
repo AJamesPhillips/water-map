@@ -7,10 +7,10 @@ import { LineMaterial } from "three/addons/lines/LineMaterial.js"
 
 
 import "./DrawGeom.css"
-import { collect_rings } from "./assets/data/utils/collect_rings"
-import { Ring } from "./assets/data/utils/interface"
 import { LatLonScale, RegionInfo, Regions, SceneData } from "./interface"
 import { water_to_drought_color } from "./utils/colour_scales"
+import { collect_rings } from "./utils/geojson/collect_rings"
+import { Ring } from "./utils/geojson/interface"
 import pub_sub from "./utils/pub_sub"
 import { regions } from "./utils/pub_sub/regions"
 
