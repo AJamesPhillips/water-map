@@ -10,7 +10,7 @@ export function Disclaimer()
     const on_click = useCallback(() =>
     {
         set_disclaimer_shown(true)
-        document.cookie = "disclaimer_shown=true; max-age=31536000"   // 1 year
+        document.cookie = "disclaimer_shown=true; max-age=86400"   // 1 day
     }, [])
 
 
