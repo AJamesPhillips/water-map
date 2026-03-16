@@ -8,7 +8,7 @@ import * as THREE from "three"
 
 import "./DemoSim.css"
 import { Disclaimer } from "./Disclaimer"
-import { DemoGeom } from "./DrawGeom"
+import { DrawGeometry } from "./DrawGeometry"
 import { DroughtScore } from "./DroughtScore"
 import { LatLonScale, Regions, SceneData } from "./interface"
 import { parent_of_region, regions, river_basins_and_catchments } from "./regions"
@@ -177,7 +177,7 @@ export function DemoSim()
             <Disclaimer />
 
             <canvas ref={canvas_ref} id="scene-3d" />
-            <DemoGeom
+            <DrawGeometry
                 scene_data={scene_data}
                 region_info={regions.england}
                 set_scale={set_scale}
@@ -185,7 +185,7 @@ export function DemoSim()
                 current_time={current_time}
             />
             {scale && river_basins_and_catchments.map(region =>
-            <DemoGeom
+            <DrawGeometry
                 key={region.file_path}
                 scene_data={scene_data}
                 region_info={region}

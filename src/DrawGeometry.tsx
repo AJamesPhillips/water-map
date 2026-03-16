@@ -67,7 +67,7 @@ type DemoGeomProps =
 
 type MeshList = { mesh: THREE.Mesh; outer_line: Line2 | undefined }[]
 
-export function DemoGeom(props: DemoGeomProps)
+export function DrawGeometry(props: DemoGeomProps)
 {
     const { scene_data, region_info } = props
     if (!scene_data) return null
