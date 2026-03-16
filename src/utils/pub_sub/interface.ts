@@ -12,6 +12,6 @@ export interface ZoomBounds
 export interface PublishableEvents
 {
     hovered_region: Regions | null
-    pointer_down: boolean
+    // pointer_down: { region: Regions | null }
     zoom_to_bounds: ZoomBounds
 }

@@ -172,3 +172,11 @@ export const regions: {[name in Regions]: RegionInfo} = {
 
 
 export const river_basins_and_catchments = Object.values(regions).filter(region => region.id !== "england")
+
+
+export function parent_of_region(region: Regions): Regions | null
+{
+    const parent_id = regions[region].parent_id
+    if (!parent_id) return null
+    return parent_id as Regions
+}

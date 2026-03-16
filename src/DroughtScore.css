@@ -2,13 +2,14 @@
 #drought_score
 {
     position: absolute;
-    left: 200px;
+    left: 14%;
     top: 30%;
     bottom: 0;
 
     display: flex;
     flex-direction: column;
     justify-content: start;
+    height: fit-content;
 }
 
 #drought_score .score_box
@@ -37,8 +38,8 @@
 #drought_score.zoomed_in
 {
     transition: left 0.5s ease-out, top 0.5s ease-out;
-    left: 100px;
-    top: 10%;
+    left: 5%;
+    top: 5%;
 }
 
 #drought_score.zoomed_in .score_box
@@ -66,4 +67,25 @@
     font-weight: 700;
     color: #222;
     text-shadow: 0 2px 8px #fff, 0 0 2px #0008;
+}
+
+
+@media screen and (max-width: 600px) {
+    #drought_score {
+        left: 5%;
+        top: 5%;
+    }
+    #drought_score .score_box {
+        padding: 10px 25px;
+        font-size: 0.95em;
+    }
+    #drought_score .region_name {
+        font-size: 1.1em;
+    }
+    #drought_score .score {
+        font-size: 2em;
+    }
+    #drought_score .extra_info {
+        font-size: 0.9em;
+    }
 }

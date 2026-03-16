@@ -1,5 +1,5 @@
 import type { FeatureCollection } from "geojson"
-import { StateUpdater, useEffect, useRef, useState } from "preact/hooks"
+import { useEffect, useRef, useState } from "preact/hooks"
 import * as THREE from "three"
 import { Line2 } from "three/addons/lines/Line2.js"
 import { LineGeometry } from "three/addons/lines/LineGeometry.js"
@@ -11,8 +11,11 @@ import { regions } from "./regions"
 import { water_to_drought_color } from "./utils/colour_scales"
 import { collect_rings } from "./utils/geojson/collect_rings"
 import { Ring } from "./utils/geojson/interface"
+import { is_on_touch_device } from "./utils/is_on_touch_device"
 import pub_sub from "./utils/pub_sub"
 
+
+const on_touch_device = is_on_touch_device()
 
 // ---------------------------------------------------------------------------
 // GeoJSON helpers
@@ -53,7 +56,6 @@ type DemoGeomProps =
     scene_data: SceneData | null
     region_info: RegionInfo
     zoom_target: Regions
-    set_zoom_target: StateUpdater<Regions>
     current_time: number
 } & ({
     set_scale: (scale: LatLonScale) => void
@@ -62,6 +64,8 @@ type DemoGeomProps =
     set_scale?: never
     scale: LatLonScale
 })
+
+type MeshList = { mesh: THREE.Mesh; outer_line: Line2 | undefined }[]
 
 export function DemoGeom(props: DemoGeomProps)
 {
@@ -78,7 +82,7 @@ export function DemoGeom(props: DemoGeomProps)
     const should_be_visible = props.region_info.z <= (zoom_target_region.z + 1)
 
     const computed_scale_ref = useRef<LatLonScale | null>(null)
-    const mesh_list_ref = useRef<{ mesh: THREE.Mesh; outer_line: Line2 | undefined }[]>([])
+    const mesh_list_ref = useRef<MeshList>([])
 
     if (geojson_error) console.error(geojson_error)
 
@@ -123,10 +127,8 @@ export function DemoGeom(props: DemoGeomProps)
             opacity: 1,
         })
 
-        const normal_outline_colour = 0x339955
-        const selected_outline_colour = 0x55ff77
         const edge_mat = new LineMaterial({
-            color: normal_outline_colour,
+            color: NORMAL_OUTLINE_COLOUR,
             linewidth: 2.5,           // screen-space pixels
             resolution: new THREE.Vector2(width * dpr, height * dpr),
         })
@@ -198,50 +200,12 @@ export function DemoGeom(props: DemoGeomProps)
         // Listen for hover events
         const unsub_hovered_region = pub_sub.sub("hovered_region", (region_id: Regions | null) =>
         {
-            const matched = region_id === props.region_info.id
-            if (matched)
-            {
-                mesh_list.forEach(m =>
-                {
-                    // (m.mesh.material as THREE.MeshBasicMaterial).color.set(selected_colour)
-                    if (!m.outer_line) return
-                    m.outer_line.position.z = props.region_info.z + 0.1
-                    m.outer_line.material.color.set(selected_outline_colour)
-                })
-            }
-            else
-            {
-                mesh_list.forEach(m =>
-                {
-                    // (m.mesh.material as THREE.MeshBasicMaterial).color.set(normal_colour)
-                    if (!m.outer_line) return
-                    m.outer_line.position.z = props.region_info.z
-                    m.outer_line.material.color.set(normal_outline_colour)
-                })
-            }
+            if (on_touch_device) return   // Don't do hover effects on touch devices
 
+            const matched = region_id === props.region_info.id
+            set_region_outline_highlighted(matched, props.region_info, mesh_list)
             set_region_is_hovered(matched)
         })
-
-
-        // Listen for pointer down
-        const unsub_pointer_down = pub_sub.sub("pointer_down", (is_down: boolean) =>
-        {
-            if (!is_down) return
-            set_region_is_hovered(is_hovered =>
-            {
-                if (is_hovered)
-                {
-                    props.set_zoom_target(current_target =>
-                    {
-                        if (current_target === props.region_info.id) return props.region_info.parent_id ?? props.region_info.id
-                        else return props.region_info.id
-                    })
-                }
-                return is_hovered
-            })
-        })
-
 
         // --- Cleanup ---
         return () =>
@@ -254,7 +218,6 @@ export function DemoGeom(props: DemoGeomProps)
             edge_mat.dispose()
             renderer.dispose()
             unsub_hovered_region()
-            unsub_pointer_down()
         }
     }, [geojson])
 
@@ -291,6 +254,13 @@ export function DemoGeom(props: DemoGeomProps)
         }
         pub_sub.pub("zoom_to_bounds", { minX, maxX, minY, maxY })
     }, [region_is_selected, geojson])
+
+
+    useEffect(() =>
+    {
+        if (!on_touch_device) return
+        set_region_outline_highlighted(region_is_selected, props.region_info, mesh_list_ref.current)
+    }, [region_is_selected])
 
     // When current_time changes, we want to use the updated water_availability
     // to update the colour of the region
@@ -354,5 +324,33 @@ function compute_or_use_scale(
         mid_lat,
         scale_x,
         scale_y,
+    }
+}
+
+
+const NORMAL_OUTLINE_COLOUR = 0x339955
+const SELECTED_OUTLINE_COLOUR = 0x55ff77
+
+function set_region_outline_highlighted(highlighted: boolean, region_info: RegionInfo, mesh_list: MeshList)
+{
+    if (highlighted)
+    {
+        mesh_list.forEach(m =>
+        {
+            // (m.mesh.material as THREE.MeshBasicMaterial).color.set(selected_colour)
+            if (!m.outer_line) return
+            m.outer_line.position.z = region_info.z + 0.1
+            m.outer_line.material.color.set(SELECTED_OUTLINE_COLOUR)
+        })
+    }
+    else
+    {
+        mesh_list.forEach(m =>
+        {
+            // (m.mesh.material as THREE.MeshBasicMaterial).color.set(normal_colour)
+            if (!m.outer_line) return
+            m.outer_line.position.z = region_info.z
+            m.outer_line.material.color.set(NORMAL_OUTLINE_COLOUR)
+        })
     }
 }

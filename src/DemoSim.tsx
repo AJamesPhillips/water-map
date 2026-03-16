@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "preact/hooks"
+import { StateUpdater, useEffect, useRef, useState } from "preact/hooks"
 import * as THREE from "three"
 
 // import { request_historical_data_components, RequestDataComponentsReturn } from "core/data/fetch_from_db"
@@ -11,7 +11,7 @@ import { Disclaimer } from "./Disclaimer"
 import { DemoGeom } from "./DrawGeom"
 import { DroughtScore } from "./DroughtScore"
 import { LatLonScale, Regions, SceneData } from "./interface"
-import { regions, river_basins_and_catchments } from "./regions"
+import { parent_of_region, regions, river_basins_and_catchments } from "./regions"
 import { TimeSlider } from "./TimeSlider"
 import pub_sub from "./utils/pub_sub"
 import { mutate_region_water_availability } from "./utils/time"
@@ -131,13 +131,8 @@ export function DemoSim()
     useEffect(() =>
     {
         if (!scene_data) return
-        const unsub1 = listen_for_hover(scene_data.canvas, scene_data.camera, scene_data.scene)
-        const unsub2 = listen_for_pointer_down(scene_data.canvas)
-        return () =>
-        {
-            unsub1()
-            unsub2()
-        }
+        const unsub = listen_for_pointer_events(scene_data.canvas, scene_data.camera, scene_data.scene, set_zoom_target)
+        return unsub
     }, [scene_data])
 
 
@@ -145,13 +140,12 @@ export function DemoSim()
         <div style={{position: "relative", width: "100%", height: "100%"}}>
             <Disclaimer />
 
-            <canvas ref={canvas_ref} id="scene-3d" style={{display: "block", width: "100%", height: "100%"}} />
+            <canvas ref={canvas_ref} id="scene-3d" />
             <DemoGeom
                 scene_data={scene_data}
                 region_info={regions.england}
                 set_scale={set_scale}
                 zoom_target={zoom_target}
-                set_zoom_target={set_zoom_target}
                 current_time={current_time}
             />
             {scale && river_basins_and_catchments.map(region =>
@@ -161,7 +155,6 @@ export function DemoSim()
                 region_info={region}
                 scale={scale}
                 zoom_target={zoom_target}
-                set_zoom_target={set_zoom_target}
                 current_time={current_time}
             />)}
 
@@ -213,36 +206,14 @@ export function DemoSim()
 // }
 
 
-function listen_for_hover(canvas: HTMLCanvasElement, camera: THREE.Camera, scene: THREE.Scene)
+function listen_for_pointer_events(canvas: HTMLCanvasElement, camera: THREE.Camera, scene: THREE.Scene, set_zoom_target: StateUpdater<Regions>)
 {
-    // --- Raycaster for hover effect ---
-    const raycaster = new THREE.Raycaster()
-
     let hovering_region_id: string | null = null
 
-    function on_pointer_move(event: MouseEvent) {
-        const rect = canvas.getBoundingClientRect()
-        const x = ((event.clientX - rect.left) / rect.width) * 2 - 1
-        const y = -((event.clientY - rect.top) / rect.height) * 2 + 1
-        raycaster.setFromCamera(new THREE.Vector2(x, y), camera)
-        // Test against ALL scene meshes so we know what was hit first globally
-        const all_intersects = raycaster.intersectObjects(scene.children, true)
-
-        // Filter out those which are not visible
-        const visible_intersects = all_intersects.filter(intersect =>
-        {
-            let obj: THREE.Object3D | null = intersect.object
-            while (obj)
-            {
-                if (!obj.visible) return false
-                obj = obj.parent
-            }
-            return true
-        })
-
-        // The closest hit overall
-        const first_hit = visible_intersects[0]?.object as THREE.Mesh | undefined
-        if (!first_hit)
+    function on_pointer_move(event: MouseEvent)
+    {
+        const region = region_from_event(canvas, camera, scene, event)
+        if (region === null)
         {
             if (hovering_region_id)
             {
@@ -251,28 +222,79 @@ function listen_for_hover(canvas: HTMLCanvasElement, camera: THREE.Camera, scene
             }
             return
         }
-
-        hovering_region_id = first_hit.userData.region_id
-        pub_sub.pub("hovered_region", hovering_region_id as Regions)
+        hovering_region_id = region
+        pub_sub.pub("hovered_region", region)
     }
-    canvas.addEventListener('mousemove', on_pointer_move)
+
+    function on_pointer_down(event: MouseEvent)
+    {
+        const region = region_from_event(canvas, camera, scene, event)
+        hovering_region_id = region
+        pub_sub.pub("hovered_region", region)
+
+        set_zoom_target(current_region =>
+        {
+            let new_region = region
+            if (current_region === region) new_region = parent_of_region(current_region)
+            return new_region ?? "england"
+        })
+    }
+
+    canvas.addEventListener("pointermove", on_pointer_move)
+    canvas.addEventListener("pointerdown", on_pointer_down)
 
     return () =>
     {
-        canvas.removeEventListener('mousemove', on_pointer_move)
+        canvas.removeEventListener("pointermove", on_pointer_move)
+        canvas.removeEventListener("pointerdown", on_pointer_down)
     }
 }
 
 
-function listen_for_pointer_down(canvas: HTMLCanvasElement)
+function region_from_event(canvas: HTMLCanvasElement, camera: THREE.Camera, scene: THREE.Scene, event: MouseEvent): Regions | null
 {
-    function on_pointer_down(_event: MouseEvent) {
-        pub_sub.pub("pointer_down", true)
-    }
-    canvas.addEventListener('pointerdown', on_pointer_down)
+    const raycaster = new THREE.Raycaster()
 
-    return () =>
+    const rect = canvas.getBoundingClientRect()
+    const clientX = (event as PointerEvent).clientX
+    const clientY = (event as PointerEvent).clientY
+    const x = ((clientX - rect.left) / rect.width) * 2 - 1
+    const y = -((clientY - rect.top) / rect.height) * 2 + 1
+    raycaster.setFromCamera(new THREE.Vector2(x, y), camera)
+
+    // For debugging pointer event location
+    // // Make a sphere in the scene if one does not already exist
+    // let sphere = scene.getObjectByName("pointer_sphere") as THREE.Mesh | undefined
+    // if (!sphere)
+    // {
+    //     const geometry = new THREE.SphereGeometry(0.1, 16, 16)
+    //     const material = new THREE.MeshBasicMaterial({ color: 0xff0000 })
+    //     sphere = new THREE.Mesh(geometry, material)
+    //     sphere.name = "pointer_sphere"
+    //     scene.add(sphere)
+    // }
+
+    // const simple_plain = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0)
+    // const intersect = raycaster.ray.intersectPlane(simple_plain, new THREE.Vector3())
+    // if (intersect) sphere.position.copy(intersect.add(new THREE.Vector3(0, 0, 5)))   // Move slightly above the plane to ensure it doesn't block raycasting of regions
+    // else sphere.position.set(1000, 1000, 1000)   // Move far away if no intersection, so it doesn't block raycasting of regions
+
+
+    const all_intersects = raycaster.intersectObjects(scene.children, true)
+    const visible_intersects = all_intersects.filter(intersect =>
     {
-        canvas.removeEventListener('pointerdown', on_pointer_down)
-    }
+        let obj: THREE.Object3D | null = intersect.object
+        while (obj)
+        {
+            if (!obj.visible) return false
+            obj = obj.parent
+        }
+        return true
+    })
+
+    // Outlines (Line2) share the same z-depth as fill meshes but carry no region_id.
+    // Skip them so a tap near a border still resolves to the correct region.
+    const first_region_hit = visible_intersects.find(i => i.object.userData.region_id !== undefined)
+    const first_hit = first_region_hit?.object as THREE.Mesh | undefined
+    return first_hit ? (first_hit.userData.region_id as Regions) : null
 }
