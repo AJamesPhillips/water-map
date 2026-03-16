@@ -81,11 +81,28 @@ export function DemoSim()
             if (target)
             {
                 const k = 0.08
-                camera.left   += (target.left   - camera.left)   * k
-                camera.right  += (target.right  - camera.right)  * k
-                camera.top    += (target.top    - camera.top)    * k
-                camera.bottom += (target.bottom - camera.bottom) * k
+
+                const diff_left   = (target.left    - camera.left)   * k
+                const diff_right  = (target.right   - camera.right)  * k
+                const diff_top    = (target.top     - camera.top)    * k
+                const diff_bottom = (target.bottom  - camera.bottom) * k
+
+                camera.left   += diff_left
+                camera.right  += diff_right
+                camera.top    += diff_top
+                camera.bottom += diff_bottom
                 camera.updateProjectionMatrix()
+
+                if (Math.abs(diff_left) + Math.abs(diff_right) + Math.abs(diff_top) + Math.abs(diff_bottom) < 0.01)
+                {
+                    // Close enough to target, snap to it and stop animating
+                    camera.left = target.left
+                    camera.right = target.right
+                    camera.top = target.top
+                    camera.bottom = target.bottom
+                    camera.updateProjectionMatrix()
+                    camera_target_ref.current = null
+                }
             }
 
             renderer.render(scene, camera)
@@ -95,10 +112,29 @@ export function DemoSim()
 
         set_scene_data({ dpr, canvas: canvas_ref.current, camera, scene, width, height, aspect, half_h })
 
+
+        // Handle window resize
+        const handle_resize = () => {
+            const width = canvas.offsetWidth
+            const height = canvas.offsetHeight
+
+            const aspect = width / height
+            // Update camera frustum
+            camera.left = -half_h * aspect
+            camera.right = half_h * aspect
+            camera.top = half_h
+            camera.bottom = -half_h
+            camera.updateProjectionMatrix()
+            renderer.setSize(width, height, false)
+        }
+
+        window.addEventListener("resize", handle_resize)
+
         return () =>
         {
             cancelAnimationFrame(anim_id)
             renderer.dispose()
+            window.removeEventListener("resize", handle_resize)
         }
     }, [])
 
