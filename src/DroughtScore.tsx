@@ -2,18 +2,18 @@ import { useRef, useState } from "preact/hooks"
 import "./DroughtScore.css"
 import { RegionInfo } from "./interface"
 import { Scale } from "./Scale"
-import { asset_url } from "./utils/asset_url"
+// import { asset_url } from "./utils/asset_url"
 
 
-const scale_images = {
-    "A": asset_url("assets/scale_A.png"),
-    "B": asset_url("assets/scale_B.png"),
-    "C": asset_url("assets/scale_C.png"),
-    "D": asset_url("assets/scale_D.png"),
-    "E": asset_url("assets/scale_E.png"),
-    "F": asset_url("assets/scale_F.png"),
-    "G": asset_url("assets/scale_G.png"),
-}
+// const scale_images = {
+//     "A": asset_url("assets/scale_A.png"),
+//     "B": asset_url("assets/scale_B.png"),
+//     "C": asset_url("assets/scale_C.png"),
+//     "D": asset_url("assets/scale_D.png"),
+//     "E": asset_url("assets/scale_E.png"),
+//     "F": asset_url("assets/scale_F.png"),
+//     "G": asset_url("assets/scale_G.png"),
+// }
 
 
 export function DroughtScore(props: { zoomed_in: boolean, current_region: RegionInfo, current_time: number })
