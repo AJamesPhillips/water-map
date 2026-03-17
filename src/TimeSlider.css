@@ -4,20 +4,26 @@
 {
     position: absolute;
     bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 20px;
-    user-select: none;
+    width: 100%;
 
+    user-select: none;
+}
+
+#time_slider_visual_wrapper
+{
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: 10px;
     padding: 10px 20px;
+
+    max-width: 500px;
+    margin: 0 auto;
+    display: flex;
+    gap: 20px;
 }
 
 #time_slider .slider
 {
-    max-width: 500px;
+    flex-grow: 1;
 }
 
 @media (pointer: coarse)

@@ -73,7 +73,8 @@ export function Scale(props: { score: number })
         >
             <defs>
                 <filter id="dropShadow" x="0" y="0" width="200%" height="200%">
-                    <feDropShadow dx="2" dy="2" stdDeviation="2" flood-colour="black" flood-opacity="0.5"/>
+                    <feDropShadow dx="2" dy="2" stdDeviation="2" flood-colour="black" flood-opacity="0.8"/>
+                    {/* <feDropShadow dx="-2" dy="2" stdDeviation="2" flood-colour="black" flood-opacity="0.5"/> */}
                 </filter>
             </defs>
             <g transform="translate(100 100)">
@@ -89,7 +90,7 @@ export function Scale(props: { score: number })
 
 const INNER_RADIUS = 40
 const RADIUS_BAND_THIN = 5
-const RADIUS_BAND_MAIN = 30
+const RADIUS_BAND_MAIN = 40
 
 interface ArcProps
 {
@@ -125,7 +126,7 @@ function Arc(props: ArcProps)
     return <>
         <path d={arc_path(arc1_args)} fill={fill_light} filter="url(#dropShadow)" />
         <path d={arc_path(arc2_args)} fill={fill_main} />
-        <text x={text_x} y={text_y + 5} text-anchor="middle" font-size="12" fill="#000">{label}</text>
+        <text x={text_x} y={text_y + 9} text-anchor="middle" font-size="20" font-weight={600} fill="#000">{label}</text>
     </>
 }
 
